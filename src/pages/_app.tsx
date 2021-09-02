@@ -26,8 +26,8 @@ function MyApp({ Component, pageProps }: AppProps) {
         />
       </Head>
       <Seo
-        metaTitle="NextJS With TS and Material UI"
-        metaDescription="NextJS Template With Typescript and Material-UI"
+        metaTitle="Saúde Timon 24h"
+        metaDescription="Sistema para cadastro de vacinação na cidade de Timon - MA"
       />
       <CssBaseline />
       <Component {...pageProps} />

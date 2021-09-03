@@ -2,11 +2,11 @@ import { makeStyles } from '@material-ui/core';
 
 const useStyles = makeStyles(() => ({
   root: {
-    flexGrow: 1,
+    width: '100%',
   },
   rectangle: {
     width: '100%',
-    height: 15,
+    height: '0.75rem',
   },
   bgYellow: {
     backgroundColor: '#ffc311',
@@ -21,11 +21,7 @@ const useStyles = makeStyles(() => ({
     backgroundColor: '#044f99',
   },
   images: {
-    padding: '30px 10% 30px 5%',
-
-    '@media (max-width: 600px)': {
-      padding: '20px 10% 20px 5%',
-    },
+    padding: '1rem 10% 1rem 5%',
   },
   logo: {
     '@media (max-width: 600px)': {
@@ -37,7 +33,7 @@ const useStyles = makeStyles(() => ({
   },
   image: {
     width: 'auto',
-    height: 150,
+    height: 120,
 
     '@media (max-width: 600px)': {
       height: 100,

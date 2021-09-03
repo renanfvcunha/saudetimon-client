@@ -6,6 +6,8 @@ const useStyles = makeStyles(() => ({
     backgroundSize: 'cover',
     minWidth: '100vw',
     minHeight: '100vh',
+    display: 'flex',
+    flexDirection: 'column',
   },
 }));
 

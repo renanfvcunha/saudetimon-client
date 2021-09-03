@@ -3,7 +3,7 @@ import Head from 'next/head';
 import { useEffect } from 'react';
 import { CssBaseline } from '@material-ui/core';
 
-import Seo from '../components/Seo';
+import Seo from '~/components/Seo';
 
 function MyApp({ Component, pageProps }: AppProps) {
   useEffect(() => {

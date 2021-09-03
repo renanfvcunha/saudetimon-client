@@ -12,6 +12,7 @@ export default function Home() {
   return (
     <Box component="section">
       <RegisterImage />
+
       <Grid container className={classes.mb1}>
         <Grid item container xs={12} md={6} className={classes.padVert1}>
           <Grid item xs={false} md={4} />
@@ -19,6 +20,7 @@ export default function Home() {
             <Infos />
           </Grid>
         </Grid>
+
         <Grid item container xs={12} md={6} className={classes.padVert1}>
           <Grid item xs={12} md={8}>
             <Menu />

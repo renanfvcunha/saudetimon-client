@@ -1,6 +1,9 @@
 import { makeStyles } from '@material-ui/core';
 
 const useStyles = makeStyles(() => ({
+  tdNone: {
+    textDecoration: 'none',
+  },
   menuItem: {
     backgroundColor: '#35458f',
     borderRadius: '0.5rem',

@@ -1,7 +1,7 @@
 import type { AppProps } from 'next/app';
 import Head from 'next/head';
 import { useEffect } from 'react';
-import { CssBaseline } from '@material-ui/core';
+import { createTheme, CssBaseline, ThemeProvider } from '@material-ui/core';
 
 import Seo from '~/components/Seo';
 
@@ -12,6 +12,14 @@ function MyApp({ Component, pageProps }: AppProps) {
       jssStyles.parentElement.removeChild(jssStyles);
     }
   }, []);
+
+  const mainTheme = createTheme({
+    palette: {
+      primary: {
+        main: '#2b3876',
+      },
+    },
+  });
 
   return (
     <>
@@ -101,12 +109,16 @@ function MyApp({ Component, pageProps }: AppProps) {
           content="assets/icons/ms-icon-144x144.png"
         />
       </Head>
+
       <Seo
         metaTitle="Saúde Timon 24h"
         metaDescription="Sistema para cadastro de vacinação contra Covid-19 na cidade de Timon - MA"
       />
-      <CssBaseline />
-      <Component {...pageProps} />
+
+      <ThemeProvider theme={mainTheme}>
+        <CssBaseline />
+        <Component {...pageProps} />
+      </ThemeProvider>
     </>
   );
 }

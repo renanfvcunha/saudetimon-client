@@ -51,6 +51,7 @@
     "react/jsx-props-no-spreading": "off",
     "no-use-before-define": "off",
     "@typescript-eslint/no-use-before-define": "error",
+    "react/prop-types": "off",
     "react/require-default-props": "off",
     "jsx-a11y/anchor-is-valid": "off"
   }

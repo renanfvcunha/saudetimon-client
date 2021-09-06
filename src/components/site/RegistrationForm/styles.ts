@@ -14,6 +14,16 @@ const useStyles = makeStyles(() => ({
     fontSize: 18,
     fontWeight: 500,
   },
+  m0: {
+    margin: 0,
+  },
+  mb05: {
+    marginBottom: '0.5rem',
+  },
+  radioButtons: {
+    display: 'flex',
+    flexDirection: 'row',
+  },
   formGroup: {
     border: '1px solid rgba(56, 53, 53, 0.5)',
     borderRadius: 8,
@@ -24,6 +34,13 @@ const useStyles = makeStyles(() => ({
     '& .MuiFilledInput-root': {
       backgroundColor: '#fff',
     },
+  },
+  p05: {
+    padding: '0.5rem',
+  },
+  helperText: {
+    fontSize: 12,
+    marginTop: '0.5rem',
   },
 }));
 

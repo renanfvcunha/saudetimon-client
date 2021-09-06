@@ -1,15 +1,22 @@
+import { createRef, useState } from 'react';
 import {
   Box,
   FormControl,
+  FormControlLabel,
   Grid,
   InputLabel,
   MenuItem,
+  Radio,
+  RadioGroup,
   Select,
   TextField,
   Typography,
 } from '@material-ui/core';
+import clsx from 'clsx';
 
 import useStyles from './styles';
+import AttachmentField from './AttachmentField';
+import { IGroup } from '~/interfaces';
 
 type Props = {
   title: string;
@@ -17,6 +24,25 @@ type Props = {
 
 export default function RegistrationForm({ title }: Props) {
   const classes = useStyles();
+
+  const [renOncImun, setRenOncImun] = useState('0');
+  const [comorbidityPatient, setComorbidityPatient] = useState('0');
+
+  const [groups, setGroups] = useState<IGroup[]>();
+
+  const [selectedGroup, setSelectedGroup] = useState('');
+
+  const inputIdDocFrontRef = createRef<HTMLInputElement>();
+  const inputIdDocVerseRef = createRef<HTMLInputElement>();
+  const inputCpfRef = createRef<HTMLInputElement>();
+  const inputAddressProofRef = createRef<HTMLInputElement>();
+  const inputMedicalReportRef = createRef<HTMLInputElement>();
+  const inputMedicalAuthorizationRef = createRef<HTMLInputElement>();
+  const inputPreNatalCardRef = createRef<HTMLInputElement>();
+  const inputPuerperalCardRef = createRef<HTMLInputElement>();
+  const inputBornAliveDecRef = createRef<HTMLInputElement>();
+  const inputWorkContractRef = createRef<HTMLInputElement>();
+  const inputAuxDocRef = createRef<HTMLInputElement>();
 
   return (
     <Box component="form" className={classes.root}>
@@ -28,18 +54,6 @@ export default function RegistrationForm({ title }: Props) {
       >
         {title}
       </Typography>
-      <Grid container className={classes.formGroup} justify="center">
-        <Grid item xs={12} sm={8} md={6}>
-          <FormControl variant="filled" fullWidth className={classes.input}>
-            <InputLabel>Grupo</InputLabel>
-            <Select>
-              <MenuItem>Grupo 1</MenuItem>
-              <MenuItem>Grupo 2</MenuItem>
-              <MenuItem>Grupo 3</MenuItem>
-            </Select>
-          </FormControl>
-        </Grid>
-      </Grid>
 
       <Typography
         component="h4"
@@ -48,6 +62,123 @@ export default function RegistrationForm({ title }: Props) {
       >
         Grupo
       </Typography>
+      <Grid container className={classes.formGroup} justify="center">
+        <Grid item xs={12} sm={8} md={6}>
+          <FormControl
+            variant="filled"
+            fullWidth
+            className={clsx([classes.input, classes.p05])}
+          >
+            <InputLabel>Grupo</InputLabel>
+            <Select
+              value={selectedGroup}
+              onChange={(e) => setSelectedGroup(e.target.value as string)}
+            >
+              <MenuItem value="1">Grupo 1</MenuItem>
+              <MenuItem value="2">Grupo 2</MenuItem>
+              <MenuItem value="3">Grupo 3</MenuItem>
+            </Select>
+          </FormControl>
+        </Grid>
+      </Grid>
+
+      <Typography
+        component="h4"
+        align="center"
+        className={clsx([classes.formGroupLabel, classes.m0])}
+      >
+        Paciente Renal, Oncológico ou Imunossuprimido?
+      </Typography>
+      <Grid
+        container
+        alignItems="center"
+        justify="center"
+        className={classes.mb05}
+      >
+        <FormControl>
+          <RadioGroup
+            className={classes.radioButtons}
+            value={renOncImun}
+            onChange={(e) => setRenOncImun(e.target.value)}
+          >
+            <FormControlLabel
+              value="0"
+              label="Não"
+              control={<Radio color="primary" />}
+            />
+            <FormControlLabel
+              value="1"
+              label="Sim"
+              control={<Radio color="primary" />}
+            />
+          </RadioGroup>
+        </FormControl>
+      </Grid>
+
+      <Typography
+        component="h4"
+        align="center"
+        className={clsx([classes.formGroupLabel, classes.m0])}
+      >
+        Paciente com Comorbidades?
+      </Typography>
+      <Grid
+        container
+        alignItems="center"
+        justify="center"
+        className={classes.mb05}
+      >
+        <FormControl>
+          <RadioGroup
+            className={classes.radioButtons}
+            value={comorbidityPatient}
+            onChange={(e) => setComorbidityPatient(e.target.value)}
+          >
+            <FormControlLabel
+              value="0"
+              label="Não"
+              control={<Radio color="primary" />}
+            />
+            <FormControlLabel
+              value="1"
+              label="Sim"
+              control={<Radio color="primary" />}
+            />
+          </RadioGroup>
+        </FormControl>
+      </Grid>
+
+      {comorbidityPatient === '1' && (
+        <>
+          <Typography
+            component="h4"
+            align="center"
+            className={classes.formGroupLabel}
+          >
+            Selecione a Comorbidade
+          </Typography>
+          <Grid container className={classes.formGroup} justify="center">
+            <Grid item xs={12} sm={8} md={6}>
+              <FormControl
+                variant="filled"
+                fullWidth
+                className={clsx([classes.input, classes.p05])}
+              >
+                <InputLabel>Comorbidade</InputLabel>
+                <Select>
+                  <MenuItem>Comorbidade 1</MenuItem>
+                  <MenuItem>Comorbidade 2</MenuItem>
+                  <MenuItem>Comorbidade 3</MenuItem>
+                </Select>
+                <Typography component="small" className={classes.helperText}>
+                  Se sua comorbidade não está na lista, então infelizmente você
+                  não está elegível ao cadastro.
+                </Typography>
+              </FormControl>
+            </Grid>
+          </Grid>
+        </>
+      )}
 
       <Typography
         component="h4"
@@ -164,6 +295,185 @@ export default function RegistrationForm({ title }: Props) {
             required
           />
         </Grid>
+      </Grid>
+
+      <Typography
+        component="h4"
+        align="center"
+        className={classes.formGroupLabel}
+      >
+        Anexos
+      </Typography>
+      <Grid container spacing={2} className={classes.formGroup}>
+        <AttachmentField
+          fieldName="Documento de Identidade (Frente)"
+          ref={inputIdDocFrontRef}
+          refClick={() => inputIdDocFrontRef.current?.click()}
+          mandatory
+        />
+
+        <AttachmentField
+          fieldName="Documento de Identidade (Verso)"
+          ref={inputIdDocVerseRef}
+          refClick={() => inputIdDocVerseRef.current?.click()}
+          mandatory
+        />
+
+        <AttachmentField
+          fieldName="CPF ou Cartão SUS"
+          ref={inputCpfRef}
+          refClick={() => inputCpfRef.current?.click()}
+          mandatory
+        />
+
+        <AttachmentField
+          fieldName="Comprovante de Endereço"
+          ref={inputAddressProofRef}
+          refClick={() => inputAddressProofRef.current?.click()}
+          mandatory
+        />
+
+        {(comorbidityPatient === '1' ||
+          renOncImun === '1' ||
+          (groups &&
+            /deficientes/i.test(
+              groups.find((grp) => grp.id.toString() === selectedGroup)
+                ?.group as string
+            ))) && (
+          <AttachmentField
+            fieldName="Laudo Médico Atualizado"
+            ref={inputMedicalReportRef}
+            refClick={() => inputMedicalReportRef.current?.click()}
+            mandatory
+          />
+        )}
+
+        {groups &&
+          /lactante/i.test(
+            groups.find((grp) => grp.id.toString() === selectedGroup)
+              ?.group as string
+          ) && (
+            <AttachmentField
+              fieldName="Declaração Médica de Bebê Amamentando"
+              ref={inputMedicalReportRef}
+              refClick={() => inputMedicalReportRef.current?.click()}
+              mandatory
+            />
+          )}
+
+        {(renOncImun === '1' ||
+          (groups &&
+            /lactante/i.test(
+              groups.find((grp) => grp.id.toString() === selectedGroup)
+                ?.group as string
+            ))) && (
+          <AttachmentField
+            fieldName="Autorização Médica"
+            ref={inputMedicalAuthorizationRef}
+            refClick={() => inputMedicalAuthorizationRef.current?.click()}
+            mandatory
+          />
+        )}
+
+        {groups &&
+          /gestante/i.test(
+            groups.find((grp) => grp.id.toString() === selectedGroup)
+              ?.group as string
+          ) && (
+            <AttachmentField
+              fieldName="Cartão de Pré Natal"
+              ref={inputPreNatalCardRef}
+              refClick={() => inputPreNatalCardRef.current?.click()}
+              mandatory
+            />
+          )}
+
+        {groups &&
+          groups.find(
+            (grp) =>
+              grp.id.toString() === selectedGroup &&
+              grp.group ===
+                'Gestantes e puérperas a partir de 18 anos COM comorbidades'
+          ) && (
+            <>
+              <AttachmentField
+                fieldName="Cartão de Puérperas"
+                ref={inputPuerperalCardRef}
+                refClick={() => inputPuerperalCardRef.current?.click()}
+                mandatory
+              />
+
+              <AttachmentField
+                fieldName="Declaração de Nascido Vivo"
+                ref={inputBornAliveDecRef}
+                refClick={() => inputBornAliveDecRef.current?.click()}
+                mandatory
+              />
+            </>
+          )}
+
+        {groups &&
+          /saúde/i.test(
+            groups.find((grp) => grp.id.toString() === selectedGroup)
+              ?.group as string
+          ) && (
+            <AttachmentField
+              fieldName="Contracheque OU Declaração de profissional autônomo autenticada em cartório OU Declaração do local de estágio"
+              ref={inputWorkContractRef}
+              refClick={() => inputWorkContractRef.current?.click()}
+              mandatory
+            />
+          )}
+
+        {groups &&
+          /motorista/i.test(
+            groups.find((grp) => grp.id.toString() === selectedGroup)
+              ?.group as string
+          ) && (
+            <AttachmentField
+              fieldName="Declaração da Empresa Prestadora dos Serviços"
+              ref={inputWorkContractRef}
+              refClick={() => inputWorkContractRef.current?.click()}
+              mandatory
+            />
+          )}
+
+        {groups &&
+          (/trabalhadores/i.test(
+            groups.find((grp) => grp.id.toString() === selectedGroup)
+              ?.group as string
+          ) ||
+            /caminhoneiros/i.test(
+              groups.find((grp) => grp.id.toString() === selectedGroup)
+                ?.group as string
+            ) ||
+            /estagiários/i.test(
+              groups.find((grp) => grp.id.toString() === selectedGroup)
+                ?.group as string
+            ) ||
+            groups.find(
+              (grp) =>
+                grp.id.toString() === selectedGroup &&
+                grp.group === 'Forças de Segurança e Salvamento'
+            )) &&
+          !/saúde/i.test(
+            groups.find((grp) => grp.id.toString() === selectedGroup)
+              ?.group as string
+          ) && (
+            <AttachmentField
+              fieldName="Contracheque OU Contrato de Trabalho OU Declaração do local de estágio informando atividade exercida"
+              ref={inputWorkContractRef}
+              refClick={() => inputWorkContractRef.current?.click()}
+              mandatory
+            />
+          )}
+
+        <AttachmentField
+          fieldName="Documentação Auxiliar (Certidão de Casamento, Contrato de Aluguel, etc.)"
+          ref={inputAuxDocRef}
+          refClick={() => inputAuxDocRef.current?.click()}
+          mandatory
+        />
       </Grid>
     </Box>
   );

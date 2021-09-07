@@ -3,6 +3,11 @@ export interface IGroup {
   group: string;
 }
 
+export interface IComorbidity {
+  id: number;
+  comorbidity: string;
+}
+
 interface IPatient {
   id: number;
   name: string;
@@ -25,6 +30,7 @@ export type PatientRegistration = Omit<IPatient, 'id'> & {
   medicalReport?: File;
   medicalAuthorization?: File;
   preNatalCard?: File;
+  puerperalCard?: File;
   bornAliveDec?: File;
   workContract?: File;
   auxDoc?: File;

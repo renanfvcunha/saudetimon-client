@@ -15,22 +15,31 @@ import {
 import clsx from 'clsx';
 
 import useStyles from './styles';
+
 import AttachmentField from './AttachmentField';
-import { IGroup, PatientRegistration } from '~/interfaces';
+
+import { IComorbidity, IGroup, PatientRegistration } from '~/interfaces';
+
 import masks from '~/utils/masks';
 
 type Props = {
   title: string;
   groups: IGroup[];
+  comorbidities: IComorbidity[];
 };
 
-export default function RegistrationForm({ title, groups }: Props) {
+export default function RegistrationForm({
+  title,
+  groups,
+  comorbidities,
+}: Props) {
   const classes = useStyles();
 
   const [renOncImun, setRenOncImun] = useState('0');
   const [comorbidityPatient, setComorbidityPatient] = useState('0');
 
   const [selectedGroup, setSelectedGroup] = useState('');
+  const [selectedComorbidity, setSelectedComorbidity] = useState('');
 
   const inputIdDocFrontRef = createRef<HTMLInputElement>();
   const inputIdDocVerseRef = createRef<HTMLInputElement>();
@@ -59,9 +68,15 @@ export default function RegistrationForm({ title, groups }: Props) {
 
   const handleChangePatient = (
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    setPatient({ ...patient, [e.target.name]: e.target.value });
+  ) => setPatient({ ...patient, [e.target.name]: e.target.value });
+
+  const handleSetFile = (e: ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files)
+      setPatient({ ...patient, [e.target.name]: e.target.files[0] });
   };
+
+  const handleClearFile = (fieldSlug: string) =>
+    setPatient({ ...patient, [fieldSlug]: undefined });
 
   return (
     <Box component="form" className={classes.root}>
@@ -94,7 +109,11 @@ export default function RegistrationForm({ title, groups }: Props) {
               onChange={(e) => setSelectedGroup(e.target.value as string)}
             >
               {groups.map((grp) => (
-                <MenuItem key={grp.id.toString()} value={grp.id.toString()}>
+                <MenuItem
+                  key={grp.id.toString()}
+                  value={grp.id.toString()}
+                  className={classes.wsUnset}
+                >
                   {grp.group}
                 </MenuItem>
               ))}
@@ -186,10 +205,21 @@ export default function RegistrationForm({ title, groups }: Props) {
                 className={clsx([classes.input, classes.p05])}
               >
                 <InputLabel>Comorbidade</InputLabel>
-                <Select>
-                  <MenuItem>Comorbidade 1</MenuItem>
-                  <MenuItem>Comorbidade 2</MenuItem>
-                  <MenuItem>Comorbidade 3</MenuItem>
+                <Select
+                  value={selectedComorbidity}
+                  onChange={(e) =>
+                    setSelectedComorbidity(e.target.value as string)
+                  }
+                >
+                  {comorbidities.map((cmb) => (
+                    <MenuItem
+                      key={cmb.id.toString()}
+                      value={cmb.id.toString()}
+                      className={classes.wsUnset}
+                    >
+                      {cmb.comorbidity}
+                    </MenuItem>
+                  ))}
                 </Select>
                 <Typography component="small" className={classes.helperText}>
                   Se sua comorbidade não está na lista, então infelizmente você
@@ -345,29 +375,45 @@ export default function RegistrationForm({ title, groups }: Props) {
       <Grid container spacing={2} className={classes.formGroup}>
         <AttachmentField
           fieldName="Documento de Identidade (Frente)"
+          fieldSlug="idDocFront"
           ref={inputIdDocFrontRef}
           refClick={() => inputIdDocFrontRef.current?.click()}
+          setFile={handleSetFile}
+          clearFile={handleClearFile}
+          field={patient.idDocFront}
           mandatory
         />
 
         <AttachmentField
           fieldName="Documento de Identidade (Verso)"
+          fieldSlug="idDocVerse"
           ref={inputIdDocVerseRef}
           refClick={() => inputIdDocVerseRef.current?.click()}
+          setFile={handleSetFile}
+          clearFile={handleClearFile}
+          field={patient.idDocVerse}
           mandatory
         />
 
         <AttachmentField
           fieldName="CPF ou Cartão SUS"
+          fieldSlug="cpfAttachment"
           ref={inputCpfRef}
           refClick={() => inputCpfRef.current?.click()}
+          setFile={handleSetFile}
+          clearFile={handleClearFile}
+          field={patient.cpfAttachment}
           mandatory
         />
 
         <AttachmentField
           fieldName="Comprovante de Endereço"
+          fieldSlug="addressProof"
           ref={inputAddressProofRef}
           refClick={() => inputAddressProofRef.current?.click()}
+          setFile={handleSetFile}
+          clearFile={handleClearFile}
+          field={patient.addressProof}
           mandatory
         />
 
@@ -380,8 +426,12 @@ export default function RegistrationForm({ title, groups }: Props) {
             ))) && (
           <AttachmentField
             fieldName="Laudo Médico Atualizado"
+            fieldSlug="medicalReport"
             ref={inputMedicalReportRef}
             refClick={() => inputMedicalReportRef.current?.click()}
+            setFile={handleSetFile}
+            clearFile={handleClearFile}
+            field={patient.medicalReport}
             mandatory
           />
         )}
@@ -393,8 +443,12 @@ export default function RegistrationForm({ title, groups }: Props) {
           ) && (
             <AttachmentField
               fieldName="Declaração Médica de Bebê Amamentando"
+              fieldSlug="medicalReport"
               ref={inputMedicalReportRef}
               refClick={() => inputMedicalReportRef.current?.click()}
+              setFile={handleSetFile}
+              clearFile={handleClearFile}
+              field={patient.medicalReport}
               mandatory
             />
           )}
@@ -407,8 +461,12 @@ export default function RegistrationForm({ title, groups }: Props) {
             ))) && (
           <AttachmentField
             fieldName="Autorização Médica"
+            fieldSlug="medicalAuthorization"
             ref={inputMedicalAuthorizationRef}
             refClick={() => inputMedicalAuthorizationRef.current?.click()}
+            setFile={handleSetFile}
+            clearFile={handleClearFile}
+            field={patient.medicalAuthorization}
             mandatory
           />
         )}
@@ -420,8 +478,12 @@ export default function RegistrationForm({ title, groups }: Props) {
           ) && (
             <AttachmentField
               fieldName="Cartão de Pré Natal"
+              fieldSlug="preNatalCard"
               ref={inputPreNatalCardRef}
               refClick={() => inputPreNatalCardRef.current?.click()}
+              setFile={handleSetFile}
+              clearFile={handleClearFile}
+              field={patient.preNatalCard}
               mandatory
             />
           )}
@@ -436,15 +498,23 @@ export default function RegistrationForm({ title, groups }: Props) {
             <>
               <AttachmentField
                 fieldName="Cartão de Puérperas"
+                fieldSlug="puerperalCard"
                 ref={inputPuerperalCardRef}
                 refClick={() => inputPuerperalCardRef.current?.click()}
+                setFile={handleSetFile}
+                clearFile={handleClearFile}
+                field={patient.puerperalCard}
                 mandatory
               />
 
               <AttachmentField
                 fieldName="Declaração de Nascido Vivo"
+                fieldSlug="bornAliveDec"
                 ref={inputBornAliveDecRef}
                 refClick={() => inputBornAliveDecRef.current?.click()}
+                setFile={handleSetFile}
+                clearFile={handleClearFile}
+                field={patient.bornAliveDec}
                 mandatory
               />
             </>
@@ -457,8 +527,12 @@ export default function RegistrationForm({ title, groups }: Props) {
           ) && (
             <AttachmentField
               fieldName="Contracheque OU Declaração de profissional autônomo autenticada em cartório OU Declaração do local de estágio"
+              fieldSlug="workContract"
               ref={inputWorkContractRef}
               refClick={() => inputWorkContractRef.current?.click()}
+              setFile={handleSetFile}
+              clearFile={handleClearFile}
+              field={patient.workContract}
               mandatory
             />
           )}
@@ -470,8 +544,12 @@ export default function RegistrationForm({ title, groups }: Props) {
           ) && (
             <AttachmentField
               fieldName="Declaração da Empresa Prestadora dos Serviços"
+              fieldSlug="workContract"
               ref={inputWorkContractRef}
               refClick={() => inputWorkContractRef.current?.click()}
+              setFile={handleSetFile}
+              clearFile={handleClearFile}
+              field={patient.workContract}
               mandatory
             />
           )}
@@ -500,17 +578,24 @@ export default function RegistrationForm({ title, groups }: Props) {
           ) && (
             <AttachmentField
               fieldName="Contracheque OU Contrato de Trabalho OU Declaração do local de estágio informando atividade exercida"
+              fieldSlug="workContract"
               ref={inputWorkContractRef}
               refClick={() => inputWorkContractRef.current?.click()}
+              setFile={handleSetFile}
+              clearFile={handleClearFile}
+              field={patient.workContract}
               mandatory
             />
           )}
 
         <AttachmentField
           fieldName="Documentação Auxiliar (Certidão de Casamento, Contrato de Aluguel, etc.)"
+          fieldSlug="auxDoc"
           ref={inputAuxDocRef}
           refClick={() => inputAuxDocRef.current?.click()}
-          mandatory
+          setFile={handleSetFile}
+          clearFile={handleClearFile}
+          field={patient.auxDoc}
         />
       </Grid>
     </Box>

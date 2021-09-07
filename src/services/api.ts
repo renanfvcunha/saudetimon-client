@@ -1,14 +1,25 @@
 import axios, { AxiosResponse } from 'axios';
 
-import { IGroup } from '~/interfaces';
+import { IComorbidity, IGroup } from '~/interfaces';
 
 const api = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL,
 });
 
-// eslint-disable-next-line import/prefer-default-export
-export const groupsReq = async (): Promise<IGroup[]> => {
-  const response: AxiosResponse<IGroup[]> = await api.get('/groups');
+export const groupsReq = async (idCategory?: string): Promise<IGroup[]> => {
+  let url = '/groups';
+
+  if (idCategory) url += `?idCategory=${idCategory}`;
+
+  const response: AxiosResponse<IGroup[]> = await api.get(url);
+
+  return response.data;
+};
+
+export const comorbiditiesReq = async (): Promise<IComorbidity[]> => {
+  const response: AxiosResponse<IComorbidity[]> = await api.get(
+    '/comorbidities'
+  );
 
   return response.data;
 };

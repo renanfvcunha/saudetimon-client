@@ -35,6 +35,9 @@ const useStyles = makeStyles(() => ({
       backgroundColor: '#fff',
     },
   },
+  wsUnset: {
+    whiteSpace: 'unset',
+  },
   p05: {
     padding: '0.5rem',
   },

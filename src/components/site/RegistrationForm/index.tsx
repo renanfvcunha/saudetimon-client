@@ -1,4 +1,4 @@
-import { createRef, useState } from 'react';
+import { ChangeEvent, createRef, useState } from 'react';
 import {
   Box,
   FormControl,
@@ -16,19 +16,19 @@ import clsx from 'clsx';
 
 import useStyles from './styles';
 import AttachmentField from './AttachmentField';
-import { IGroup } from '~/interfaces';
+import { IGroup, PatientRegistration } from '~/interfaces';
+import masks from '~/utils/masks';
 
 type Props = {
   title: string;
+  groups: IGroup[];
 };
 
-export default function RegistrationForm({ title }: Props) {
+export default function RegistrationForm({ title, groups }: Props) {
   const classes = useStyles();
 
   const [renOncImun, setRenOncImun] = useState('0');
   const [comorbidityPatient, setComorbidityPatient] = useState('0');
-
-  const [groups, setGroups] = useState<IGroup[]>();
 
   const [selectedGroup, setSelectedGroup] = useState('');
 
@@ -43,6 +43,25 @@ export default function RegistrationForm({ title }: Props) {
   const inputBornAliveDecRef = createRef<HTMLInputElement>();
   const inputWorkContractRef = createRef<HTMLInputElement>();
   const inputAuxDocRef = createRef<HTMLInputElement>();
+
+  const [patient, setPatient] = useState<PatientRegistration>({
+    name: '',
+    cpf: '',
+    susCard: '',
+    phone: '',
+    street: '',
+    number: '',
+    complement: '',
+    reference: '',
+    neighborhood: '',
+    renOncImun: false,
+  });
+
+  const handleChangePatient = (
+    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    setPatient({ ...patient, [e.target.name]: e.target.value });
+  };
 
   return (
     <Box component="form" className={classes.root}>
@@ -74,9 +93,11 @@ export default function RegistrationForm({ title }: Props) {
               value={selectedGroup}
               onChange={(e) => setSelectedGroup(e.target.value as string)}
             >
-              <MenuItem value="1">Grupo 1</MenuItem>
-              <MenuItem value="2">Grupo 2</MenuItem>
-              <MenuItem value="3">Grupo 3</MenuItem>
+              {groups.map((grp) => (
+                <MenuItem key={grp.id.toString()} value={grp.id.toString()}>
+                  {grp.group}
+                </MenuItem>
+              ))}
             </Select>
           </FormControl>
         </Grid>
@@ -197,6 +218,8 @@ export default function RegistrationForm({ title }: Props) {
             fullWidth
             className={classes.input}
             required
+            value={patient.name}
+            onChange={handleChangePatient}
           />
         </Grid>
         <Grid item xs={12} sm={6} md={4}>
@@ -207,6 +230,10 @@ export default function RegistrationForm({ title }: Props) {
             label="CPF"
             fullWidth
             className={classes.input}
+            value={patient.cpf}
+            onChange={(e) =>
+              setPatient({ ...patient, cpf: masks.cpfMask(e.target.value) })
+            }
           />
         </Grid>
         <Grid item xs={12} sm={6} md={4}>
@@ -218,6 +245,13 @@ export default function RegistrationForm({ title }: Props) {
             fullWidth
             className={classes.input}
             required
+            value={patient.susCard}
+            onChange={(e) =>
+              setPatient({
+                ...patient,
+                susCard: masks.susCardMask(e.target.value),
+              })
+            }
           />
         </Grid>
         <Grid item xs={12} sm={6} md={4}>
@@ -229,6 +263,10 @@ export default function RegistrationForm({ title }: Props) {
             fullWidth
             className={classes.input}
             required
+            value={patient.phone}
+            onChange={(e) =>
+              setPatient({ ...patient, phone: masks.phoneMask(e.target.value) })
+            }
           />
         </Grid>
       </Grid>

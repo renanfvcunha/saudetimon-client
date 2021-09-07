@@ -9,7 +9,7 @@ export default function RegisterImage() {
     <Grid
       container
       alignItems="center"
-      justify="center"
+      justifyContent="center"
       className={classes.container}
     >
       <img

@@ -62,7 +62,7 @@ export default function RegistrationForm({ title }: Props) {
       >
         Grupo
       </Typography>
-      <Grid container className={classes.formGroup} justify="center">
+      <Grid container className={classes.formGroup} justifyContent="center">
         <Grid item xs={12} sm={8} md={6}>
           <FormControl
             variant="filled"
@@ -92,7 +92,7 @@ export default function RegistrationForm({ title }: Props) {
       <Grid
         container
         alignItems="center"
-        justify="center"
+        justifyContent="center"
         className={classes.mb05}
       >
         <FormControl>
@@ -125,7 +125,7 @@ export default function RegistrationForm({ title }: Props) {
       <Grid
         container
         alignItems="center"
-        justify="center"
+        justifyContent="center"
         className={classes.mb05}
       >
         <FormControl>
@@ -157,7 +157,7 @@ export default function RegistrationForm({ title }: Props) {
           >
             Selecione a Comorbidade
           </Typography>
-          <Grid container className={classes.formGroup} justify="center">
+          <Grid container className={classes.formGroup} justifyContent="center">
             <Grid item xs={12} sm={8} md={6}>
               <FormControl
                 variant="filled"

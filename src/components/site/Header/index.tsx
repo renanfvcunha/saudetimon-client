@@ -40,7 +40,7 @@ export default function Header() {
           />
         </Grid>
 
-        <Grid item xs={12} sm={11} container justify="center">
+        <Grid item xs={12} sm={11} container justifyContent="center">
           <img
             src="/assets/images/logo.png"
             alt="Logo Saúde Timon 24h"

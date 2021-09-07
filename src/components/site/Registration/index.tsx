@@ -11,7 +11,7 @@ export default function Registration() {
       <Grid
         container
         alignItems="center"
-        justify="center"
+        justifyContent="center"
         style={{ marginBottom: '1rem', padding: '0 1rem' }}
       >
         <Grid

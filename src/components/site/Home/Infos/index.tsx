@@ -8,7 +8,7 @@ export default function Infos() {
 
   return (
     <div className={classes.root}>
-      <Grid container alignItems="center" justify="center">
+      <Grid container alignItems="center" justifyContent="center">
         <Box className={classes.infoTitleBox}>
           <Typography component="span" className={classes.infoTitle}>
             Fique Atento

@@ -1,6 +1,9 @@
-import { ChangeEvent, createRef, useState } from 'react';
+import { ChangeEvent, createRef, FormEvent, useState } from 'react';
+import { useRouter } from 'next/router';
 import {
   Box,
+  Button,
+  CircularProgress,
   FormControl,
   FormControlLabel,
   Grid,
@@ -21,25 +24,25 @@ import AttachmentField from './AttachmentField';
 import { IComorbidity, IGroup, PatientRegistration } from '~/interfaces';
 
 import masks from '~/utils/masks';
+import catchHandler, { Err } from '~/utils/catchHandler';
+import { createPatientReq } from '~/services/api';
+import Alert from '~/utils/alert';
 
 type Props = {
   title: string;
   groups: IGroup[];
   comorbidities: IComorbidity[];
+  idCategory: string;
 };
 
 export default function RegistrationForm({
   title,
   groups,
   comorbidities,
+  idCategory,
 }: Props) {
   const classes = useStyles();
-
-  const [renOncImun, setRenOncImun] = useState('0');
-  const [comorbidityPatient, setComorbidityPatient] = useState('0');
-
-  const [selectedGroup, setSelectedGroup] = useState('');
-  const [selectedComorbidity, setSelectedComorbidity] = useState('');
+  const router = useRouter();
 
   const inputIdDocFrontRef = createRef<HTMLInputElement>();
   const inputIdDocVerseRef = createRef<HTMLInputElement>();
@@ -53,6 +56,8 @@ export default function RegistrationForm({
   const inputWorkContractRef = createRef<HTMLInputElement>();
   const inputAuxDocRef = createRef<HTMLInputElement>();
 
+  const [comorbidityPatient, setComorbidityPatient] = useState('0');
+
   const [patient, setPatient] = useState<PatientRegistration>({
     name: '',
     cpf: '',
@@ -63,8 +68,14 @@ export default function RegistrationForm({
     complement: '',
     reference: '',
     neighborhood: '',
-    renOncImun: false,
+    renOncImun: 'false',
+    idCategory,
+    idGroup: groups[0].id.toString(),
+    idComorbidity: comorbidities[0].id.toString(),
   });
+
+  const [loading, setLoading] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState(0);
 
   const handleChangePatient = (
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -78,8 +89,37 @@ export default function RegistrationForm({
   const handleClearFile = (fieldSlug: string) =>
     setPatient({ ...patient, [fieldSlug]: undefined });
 
+  const handleSubmit = async (e: FormEvent) => {
+    e.preventDefault();
+
+    const patientParsed = { ...patient };
+
+    if (!patient.susCard) delete patientParsed.susCard;
+    if (!patient.complement) delete patientParsed.complement;
+    if (comorbidityPatient !== '1') delete patientParsed.idComorbidity;
+
+    try {
+      setLoading(true);
+
+      const msg = await createPatientReq(patientParsed, (pg) => {
+        setUploadProgress((pg.loaded * 100) / pg.total);
+      });
+
+      Alert('success', '', msg);
+      router.push('/');
+    } catch (err) {
+      catchHandler(
+        err as Err,
+        'Não foi possível realizar o cadastro. Tente novamente ou contate o suporte.'
+      );
+    } finally {
+      setLoading(false);
+      setUploadProgress(0);
+    }
+  };
+
   return (
-    <Box component="form" className={classes.root}>
+    <Box component="form" className={classes.root} onSubmit={handleSubmit}>
       <Typography
         component="h1"
         variant="h4"
@@ -105,8 +145,10 @@ export default function RegistrationForm({
           >
             <InputLabel>Grupo</InputLabel>
             <Select
-              value={selectedGroup}
-              onChange={(e) => setSelectedGroup(e.target.value as string)}
+              value={patient.idGroup}
+              onChange={(e) =>
+                setPatient({ ...patient, idGroup: e.target.value as string })
+              }
             >
               {groups.map((grp) => (
                 <MenuItem
@@ -138,16 +180,18 @@ export default function RegistrationForm({
         <FormControl>
           <RadioGroup
             className={classes.radioButtons}
-            value={renOncImun}
-            onChange={(e) => setRenOncImun(e.target.value)}
+            value={patient.renOncImun}
+            onChange={(e) =>
+              setPatient({ ...patient, renOncImun: e.target.value })
+            }
           >
             <FormControlLabel
-              value="0"
+              value="false"
               label="Não"
               control={<Radio color="primary" />}
             />
             <FormControlLabel
-              value="1"
+              value="true"
               label="Sim"
               control={<Radio color="primary" />}
             />
@@ -206,9 +250,12 @@ export default function RegistrationForm({
               >
                 <InputLabel>Comorbidade</InputLabel>
                 <Select
-                  value={selectedComorbidity}
+                  value={patient.idComorbidity}
                   onChange={(e) =>
-                    setSelectedComorbidity(e.target.value as string)
+                    setPatient({
+                      ...patient,
+                      idComorbidity: e.target.value as string,
+                    })
                   }
                 >
                   {comorbidities.map((cmb) => (
@@ -274,7 +321,6 @@ export default function RegistrationForm({
             label="Cartão SUS"
             fullWidth
             className={classes.input}
-            required
             value={patient.susCard}
             onChange={(e) =>
               setPatient({
@@ -318,6 +364,8 @@ export default function RegistrationForm({
             fullWidth
             className={classes.input}
             required
+            value={patient.street}
+            onChange={handleChangePatient}
           />
         </Grid>
         <Grid item xs={12} sm={4} md={3}>
@@ -329,6 +377,8 @@ export default function RegistrationForm({
             fullWidth
             className={classes.input}
             required
+            value={patient.number}
+            onChange={handleChangePatient}
           />
         </Grid>
         <Grid item xs={12} sm={8} md={3}>
@@ -339,6 +389,8 @@ export default function RegistrationForm({
             label="Complemento"
             fullWidth
             className={classes.input}
+            value={patient.complement}
+            onChange={handleChangePatient}
           />
         </Grid>
         <Grid item xs={12} sm={8} md={6}>
@@ -350,6 +402,8 @@ export default function RegistrationForm({
             fullWidth
             className={classes.input}
             required
+            value={patient.reference}
+            onChange={handleChangePatient}
           />
         </Grid>
         <Grid item xs={12} sm={4} md={3}>
@@ -361,6 +415,8 @@ export default function RegistrationForm({
             fullWidth
             className={classes.input}
             required
+            value={patient.neighborhood}
+            onChange={handleChangePatient}
           />
         </Grid>
       </Grid>
@@ -418,10 +474,10 @@ export default function RegistrationForm({
         />
 
         {(comorbidityPatient === '1' ||
-          renOncImun === '1' ||
+          patient.renOncImun === 'true' ||
           (groups &&
             /deficientes/i.test(
-              groups.find((grp) => grp.id.toString() === selectedGroup)
+              groups.find((grp) => grp.id.toString() === patient.idGroup)
                 ?.group as string
             ))) && (
           <AttachmentField
@@ -438,7 +494,7 @@ export default function RegistrationForm({
 
         {groups &&
           /lactante/i.test(
-            groups.find((grp) => grp.id.toString() === selectedGroup)
+            groups.find((grp) => grp.id.toString() === patient.idGroup)
               ?.group as string
           ) && (
             <AttachmentField
@@ -453,10 +509,10 @@ export default function RegistrationForm({
             />
           )}
 
-        {(renOncImun === '1' ||
+        {(patient.renOncImun === 'true' ||
           (groups &&
             /lactante/i.test(
-              groups.find((grp) => grp.id.toString() === selectedGroup)
+              groups.find((grp) => grp.id.toString() === patient.idGroup)
                 ?.group as string
             ))) && (
           <AttachmentField
@@ -473,7 +529,7 @@ export default function RegistrationForm({
 
         {groups &&
           /gestante/i.test(
-            groups.find((grp) => grp.id.toString() === selectedGroup)
+            groups.find((grp) => grp.id.toString() === patient.idGroup)
               ?.group as string
           ) && (
             <AttachmentField
@@ -491,7 +547,7 @@ export default function RegistrationForm({
         {groups &&
           groups.find(
             (grp) =>
-              grp.id.toString() === selectedGroup &&
+              grp.id.toString() === patient.idGroup &&
               grp.group ===
                 'Gestantes e puérperas a partir de 18 anos COM comorbidades'
           ) && (
@@ -522,7 +578,7 @@ export default function RegistrationForm({
 
         {groups &&
           /saúde/i.test(
-            groups.find((grp) => grp.id.toString() === selectedGroup)
+            groups.find((grp) => grp.id.toString() === patient.idGroup)
               ?.group as string
           ) && (
             <AttachmentField
@@ -539,7 +595,7 @@ export default function RegistrationForm({
 
         {groups &&
           /motorista/i.test(
-            groups.find((grp) => grp.id.toString() === selectedGroup)
+            groups.find((grp) => grp.id.toString() === patient.idGroup)
               ?.group as string
           ) && (
             <AttachmentField
@@ -556,24 +612,24 @@ export default function RegistrationForm({
 
         {groups &&
           (/trabalhadores/i.test(
-            groups.find((grp) => grp.id.toString() === selectedGroup)
+            groups.find((grp) => grp.id.toString() === patient.idGroup)
               ?.group as string
           ) ||
             /caminhoneiros/i.test(
-              groups.find((grp) => grp.id.toString() === selectedGroup)
+              groups.find((grp) => grp.id.toString() === patient.idGroup)
                 ?.group as string
             ) ||
             /estagiários/i.test(
-              groups.find((grp) => grp.id.toString() === selectedGroup)
+              groups.find((grp) => grp.id.toString() === patient.idGroup)
                 ?.group as string
             ) ||
             groups.find(
               (grp) =>
-                grp.id.toString() === selectedGroup &&
+                grp.id.toString() === patient.idGroup &&
                 grp.group === 'Forças de Segurança e Salvamento'
             )) &&
           !/saúde/i.test(
-            groups.find((grp) => grp.id.toString() === selectedGroup)
+            groups.find((grp) => grp.id.toString() === patient.idGroup)
               ?.group as string
           ) && (
             <AttachmentField
@@ -597,6 +653,30 @@ export default function RegistrationForm({
           clearFile={handleClearFile}
           field={patient.auxDoc}
         />
+      </Grid>
+
+      {loading && (
+        <Grid container justifyContent="center">
+          <CircularProgress
+            variant="determinate"
+            value={uploadProgress}
+            size={32}
+          />
+        </Grid>
+      )}
+
+      <Grid container justifyContent="center" className={classes.mt1}>
+        <Grid item xs={12} sm={9} md={6}>
+          <Button
+            variant="contained"
+            color="primary"
+            type="submit"
+            fullWidth
+            disabled={loading}
+          >
+            Enviar
+          </Button>
+        </Grid>
       </Grid>
     </Box>
   );

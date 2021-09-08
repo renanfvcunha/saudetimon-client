@@ -58,6 +58,7 @@ export default function Registration() {
             <RegistrationComponent
               groups={groups}
               comorbidities={comorbidities}
+              idCategory="3"
             />
           )}
         </Main>

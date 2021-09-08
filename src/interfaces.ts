@@ -19,7 +19,6 @@ interface IPatient {
   complement?: string;
   reference: string;
   neighborhood: string;
-  renOncImun: boolean;
 }
 
 export type PatientRegistration = Omit<IPatient, 'id'> & {
@@ -34,4 +33,8 @@ export type PatientRegistration = Omit<IPatient, 'id'> & {
   bornAliveDec?: File;
   workContract?: File;
   auxDoc?: File;
+  renOncImun: string;
+  idCategory: string;
+  idGroup: string;
+  idComorbidity?: string;
 };

@@ -45,6 +45,9 @@ const useStyles = makeStyles(() => ({
     fontSize: 12,
     marginTop: '0.5rem',
   },
+  mt1: {
+    marginTop: '1rem',
+  },
 }));
 
 export default useStyles;

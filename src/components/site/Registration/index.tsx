@@ -8,9 +8,14 @@ import { IComorbidity, IGroup } from '~/interfaces';
 type Props = {
   groups: IGroup[];
   comorbidities: IComorbidity[];
+  idCategory: string;
 };
 
-export default function Registration({ groups, comorbidities }: Props) {
+export default function Registration({
+  groups,
+  comorbidities,
+  idCategory,
+}: Props) {
   return (
     <Box component="section">
       <RegisterImage />
@@ -33,6 +38,7 @@ export default function Registration({ groups, comorbidities }: Props) {
             title="Cadastro Geral"
             groups={groups}
             comorbidities={comorbidities}
+            idCategory={idCategory}
           />
         </Grid>
       </Grid>

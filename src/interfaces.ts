@@ -8,6 +8,11 @@ export interface IComorbidity {
   comorbidity: string;
 }
 
+interface ICategory {
+  id: number;
+  category: string;
+}
+
 interface IPatient {
   id: number;
   name: string;
@@ -19,6 +24,12 @@ interface IPatient {
   complement?: string;
   reference: string;
   neighborhood: string;
+}
+
+interface IStatus {
+  id: number;
+  status: string;
+  message: string;
 }
 
 export type PatientRegistration = Omit<IPatient, 'id'> & {
@@ -37,4 +48,17 @@ export type PatientRegistration = Omit<IPatient, 'id'> & {
   idCategory: string;
   idGroup: string;
   idComorbidity?: string;
+};
+
+export type StatusCheck = {
+  patient: {
+    id: number;
+    cpf: string;
+    category: ICategory;
+    group: IGroup;
+    patientStatus: {
+      message: string | null;
+      status: IStatus;
+    };
+  };
 };

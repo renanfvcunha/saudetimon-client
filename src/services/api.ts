@@ -1,6 +1,11 @@
 import axios, { AxiosResponse } from 'axios';
 
-import { IComorbidity, IGroup, PatientRegistration } from '~/interfaces';
+import {
+  IComorbidity,
+  IGroup,
+  PatientRegistration,
+  StatusCheck,
+} from '~/interfaces';
 
 const api = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL,
@@ -73,4 +78,12 @@ export const createPatientReq = async (
   );
 
   return response.data.msg;
+};
+
+export const statusCheckReq = async (cpf: string) => {
+  const response: AxiosResponse<StatusCheck> = await api.get(
+    `/patients/status/${cpf}`
+  );
+
+  return response.data;
 };

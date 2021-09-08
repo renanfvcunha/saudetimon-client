@@ -94,16 +94,21 @@ export default function RegistrationForm({
 
     const patientParsed = { ...patient };
 
-    if (!patient.susCard) delete patientParsed.susCard;
     if (!patient.complement) delete patientParsed.complement;
     if (comorbidityPatient !== '1') delete patientParsed.idComorbidity;
+
+    patientParsed.cpf = masks.numberMask(patient.cpf);
+    if (patient.susCard)
+      patientParsed.susCard = masks.numberMask(patient.susCard);
+    else delete patientParsed.susCard;
+    patientParsed.phone = masks.numberMask(patient.phone);
 
     try {
       setLoading(true);
 
-      const msg = await createPatientReq(patientParsed, (pg) => {
-        setUploadProgress((pg.loaded * 100) / pg.total);
-      });
+      const msg = await createPatientReq(patientParsed, (pg) =>
+        setUploadProgress((pg.loaded * 100) / pg.total)
+      );
 
       Alert('success', '', msg);
       router.push('/');

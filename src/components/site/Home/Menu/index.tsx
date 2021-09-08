@@ -46,20 +46,24 @@ export default function Menu() {
         </a>
       </Link>
 
-      <Grid item container alignItems="center" className={classes.menuItem}>
-        <Grid item xs={3} className={classes.pl15}>
-          <Avatar
-            src="assets/images/checagem.png"
-            alt="Figurinha de uma pessoa mexendo no celular com um ícone verde de checagem"
-            className={classes.avatar}
-          />
-        </Grid>
-        <Grid item xs={9}>
-          <Typography component="span" className={classes.menuItemText}>
-            Verifique o status da sua solicitação
-          </Typography>
-        </Grid>
-      </Grid>
+      <Link href="/checagem">
+        <a className={classes.tdNone}>
+          <Grid item container alignItems="center" className={classes.menuItem}>
+            <Grid item xs={3} className={classes.pl15}>
+              <Avatar
+                src="assets/images/checagem.png"
+                alt="Figurinha de uma pessoa mexendo no celular com um ícone verde de checagem"
+                className={classes.avatar}
+              />
+            </Grid>
+            <Grid item xs={9}>
+              <Typography component="span" className={classes.menuItemText}>
+                Verifique o status da sua solicitação
+              </Typography>
+            </Grid>
+          </Grid>
+        </a>
+      </Link>
 
       <Grid item container alignItems="center" className={classes.menuItem}>
         <Grid item xs={3} className={classes.pl15}>

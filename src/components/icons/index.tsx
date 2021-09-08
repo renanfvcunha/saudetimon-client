@@ -1,4 +1,3 @@
-/* eslint-disable import/prefer-default-export */
 import { SvgIcon, SvgIconProps } from '@material-ui/core';
 
 export function DotIcon(props: SvgIconProps) {

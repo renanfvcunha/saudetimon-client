@@ -6,12 +6,14 @@ import RegistrationForm from '~/components/site/RegistrationForm';
 import { IComorbidity, IGroup } from '~/interfaces';
 
 type Props = {
+  title: string;
   groups: IGroup[];
   comorbidities: IComorbidity[];
   idCategory: string;
 };
 
 export default function Registration({
+  title,
   groups,
   comorbidities,
   idCategory,
@@ -35,7 +37,7 @@ export default function Registration({
           style={{ backgroundColor: '#d0cece', borderRadius: 8 }}
         >
           <RegistrationForm
-            title="Cadastro Geral"
+            title={title}
             groups={groups}
             comorbidities={comorbidities}
             idCategory={idCategory}

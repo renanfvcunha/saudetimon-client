@@ -53,16 +53,16 @@ export default function Registration() {
 
   return (
     <>
-      <Seo metaTitle="Cadastro - Saúde Timon 24h" />
+      <Seo metaTitle="Acamados - Saúde Timon 24h" />
       <Background>
         <Header />
         <Main>
           {groups && comorbidities && (
             <RegistrationComponent
-              title="Cadastro Geral"
+              title="Pacientes Acamados"
               groups={groups}
               comorbidities={comorbidities}
-              idCategory="3"
+              idCategory="1"
             />
           )}
         </Main>

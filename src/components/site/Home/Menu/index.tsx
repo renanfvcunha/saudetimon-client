@@ -8,20 +8,24 @@ export default function Menu() {
 
   return (
     <Grid component="nav" container direction="column">
-      <Grid item container alignItems="center" className={classes.menuItem}>
-        <Grid item xs={3} className={classes.pl15}>
-          <Avatar
-            src="assets/images/acamado.png"
-            alt="Figurinha de uma pessoa acamada"
-            className={classes.avatar}
-          />
-        </Grid>
-        <Grid item xs={9}>
-          <Typography component="span" className={classes.menuItemText}>
-            Cadastro de pacientes acamados
-          </Typography>
-        </Grid>
-      </Grid>
+      <Link href="/acamados">
+        <a className={classes.tdNone}>
+          <Grid item container alignItems="center" className={classes.menuItem}>
+            <Grid item xs={3} className={classes.pl15}>
+              <Avatar
+                src="assets/images/acamado.png"
+                alt="Figurinha de uma pessoa acamada"
+                className={classes.avatar}
+              />
+            </Grid>
+            <Grid item xs={9}>
+              <Typography component="span" className={classes.menuItemText}>
+                Cadastro de pacientes acamados
+              </Typography>
+            </Grid>
+          </Grid>
+        </a>
+      </Link>
 
       <Link href="/cadastro">
         <a className={classes.tdNone}>

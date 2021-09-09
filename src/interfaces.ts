@@ -62,3 +62,12 @@ export type StatusCheck = {
     };
   };
 };
+
+export type PatientSelf = IPatient & {
+  susCard: string | null;
+  complement: string | null;
+  renOncImun: boolean;
+  idGroup: number;
+  idComorbidity: number | null;
+  status: string;
+};

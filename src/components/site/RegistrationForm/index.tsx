@@ -1,4 +1,4 @@
-import { ChangeEvent, createRef, FormEvent, useState } from 'react';
+import { ChangeEvent, createRef, FormEvent, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import {
   Box,
@@ -21,18 +21,24 @@ import useStyles from './styles';
 
 import AttachmentField from './AttachmentField';
 
-import { IComorbidity, IGroup, PatientRegistration } from '~/interfaces';
+import {
+  IComorbidity,
+  IGroup,
+  PatientRegistration,
+  PatientSelf,
+} from '~/interfaces';
 
 import masks from '~/utils/masks';
 import catchHandler, { Err } from '~/utils/catchHandler';
-import { createPatientReq } from '~/services/api';
+import { createPatientReq, updatePatientReq } from '~/services/api';
 import Alert from '~/utils/alert';
 
 type Props = {
   title: string;
   groups: IGroup[];
   comorbidities: IComorbidity[];
-  idCategory: string;
+  idCategory?: string;
+  patientData?: PatientSelf;
 };
 
 export default function RegistrationForm({
@@ -40,6 +46,7 @@ export default function RegistrationForm({
   groups,
   comorbidities,
   idCategory,
+  patientData,
 }: Props) {
   const classes = useStyles();
   const router = useRouter();
@@ -69,7 +76,7 @@ export default function RegistrationForm({
     reference: '',
     neighborhood: '',
     renOncImun: 'false',
-    idCategory,
+    idCategory: idCategory || '',
     idGroup: groups[0].id.toString(),
     idComorbidity: comorbidities[0].id.toString(),
   });
@@ -106,9 +113,21 @@ export default function RegistrationForm({
     try {
       setLoading(true);
 
-      const msg = await createPatientReq(patientParsed, (pg) =>
-        setUploadProgress((pg.loaded * 100) / pg.total)
-      );
+      let msg = '';
+
+      if (idCategory) {
+        msg = await createPatientReq(patientParsed, (pg) =>
+          setUploadProgress((pg.loaded * 100) / pg.total)
+        );
+      }
+
+      if (patientData) {
+        msg = await updatePatientReq(
+          patientData.id.toString(),
+          patientParsed,
+          (pg) => setUploadProgress((pg.loaded * 100) / pg.total)
+        );
+      }
 
       Alert('success', '', msg);
       router.push('/');
@@ -123,6 +142,37 @@ export default function RegistrationForm({
     }
   };
 
+  useEffect(() => {
+    if (patientData) {
+      const {
+        name,
+        cpf,
+        susCard,
+        phone,
+        street,
+        number,
+        complement,
+        reference,
+        neighborhood,
+        idGroup,
+      } = patientData;
+
+      setPatient((ptt) => ({
+        ...ptt,
+        name,
+        cpf: masks.cpfMask(cpf),
+        susCard: (susCard && masks.susCardMask(susCard)) || '',
+        phone: masks.phoneMask(phone),
+        street,
+        number,
+        complement: complement || '',
+        reference,
+        neighborhood,
+        idGroup: idGroup.toString(),
+      }));
+    }
+  }, [patientData]);
+
   return (
     <Box component="form" className={classes.root} onSubmit={handleSubmit}>
       <Typography
@@ -134,117 +184,14 @@ export default function RegistrationForm({
         {title}
       </Typography>
 
-      <Typography
-        component="h4"
-        align="center"
-        className={classes.formGroupLabel}
-      >
-        Grupo
-      </Typography>
-      <Grid container className={classes.formGroup} justifyContent="center">
-        <Grid item xs={12} sm={8} md={6}>
-          <FormControl
-            variant="filled"
-            fullWidth
-            className={clsx([classes.input, classes.p05])}
-          >
-            <InputLabel>Grupo</InputLabel>
-            <Select
-              value={patient.idGroup}
-              onChange={(e) =>
-                setPatient({ ...patient, idGroup: e.target.value as string })
-              }
-            >
-              {groups.map((grp) => (
-                <MenuItem
-                  key={grp.id.toString()}
-                  value={grp.id.toString()}
-                  className={classes.wsUnset}
-                >
-                  {grp.group}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-        </Grid>
-      </Grid>
-
-      <Typography
-        component="h4"
-        align="center"
-        className={clsx([classes.formGroupLabel, classes.m0])}
-      >
-        Paciente Renal, Oncológico ou Imunossuprimido?
-      </Typography>
-      <Grid
-        container
-        alignItems="center"
-        justifyContent="center"
-        className={classes.mb05}
-      >
-        <FormControl>
-          <RadioGroup
-            className={classes.radioButtons}
-            value={patient.renOncImun}
-            onChange={(e) =>
-              setPatient({ ...patient, renOncImun: e.target.value })
-            }
-          >
-            <FormControlLabel
-              value="false"
-              label="Não"
-              control={<Radio color="primary" />}
-            />
-            <FormControlLabel
-              value="true"
-              label="Sim"
-              control={<Radio color="primary" />}
-            />
-          </RadioGroup>
-        </FormControl>
-      </Grid>
-
-      <Typography
-        component="h4"
-        align="center"
-        className={clsx([classes.formGroupLabel, classes.m0])}
-      >
-        Paciente com Comorbidades?
-      </Typography>
-      <Grid
-        container
-        alignItems="center"
-        justifyContent="center"
-        className={classes.mb05}
-      >
-        <FormControl>
-          <RadioGroup
-            className={classes.radioButtons}
-            value={comorbidityPatient}
-            onChange={(e) => setComorbidityPatient(e.target.value)}
-          >
-            <FormControlLabel
-              value="0"
-              label="Não"
-              control={<Radio color="primary" />}
-            />
-            <FormControlLabel
-              value="1"
-              label="Sim"
-              control={<Radio color="primary" />}
-            />
-          </RadioGroup>
-        </FormControl>
-      </Grid>
-
-      {comorbidityPatient === '1' && (
+      {idCategory && (
         <>
           <Typography
             component="h4"
             align="center"
             className={classes.formGroupLabel}
           >
-            Selecione a Comorbidade
+            Grupo
           </Typography>
           <Grid container className={classes.formGroup} justifyContent="center">
             <Grid item xs={12} sm={8} md={6}>
@@ -253,33 +200,150 @@ export default function RegistrationForm({
                 fullWidth
                 className={clsx([classes.input, classes.p05])}
               >
-                <InputLabel>Comorbidade</InputLabel>
+                <InputLabel>Grupo</InputLabel>
                 <Select
-                  value={patient.idComorbidity}
+                  value={patient.idGroup}
                   onChange={(e) =>
                     setPatient({
                       ...patient,
-                      idComorbidity: e.target.value as string,
+                      idGroup: e.target.value as string,
                     })
                   }
                 >
-                  {comorbidities.map((cmb) => (
+                  {groups.map((grp) => (
                     <MenuItem
-                      key={cmb.id.toString()}
-                      value={cmb.id.toString()}
+                      key={grp.id.toString()}
+                      value={grp.id.toString()}
                       className={classes.wsUnset}
                     >
-                      {cmb.comorbidity}
+                      {grp.group}
                     </MenuItem>
                   ))}
                 </Select>
-                <Typography component="small" className={classes.helperText}>
-                  Se sua comorbidade não está na lista, então infelizmente você
-                  não está elegível ao cadastro.
-                </Typography>
               </FormControl>
             </Grid>
           </Grid>
+
+          <Typography
+            component="h4"
+            align="center"
+            className={clsx([classes.formGroupLabel, classes.m0])}
+          >
+            Paciente Renal, Oncológico ou Imunossuprimido?
+          </Typography>
+          <Grid
+            container
+            alignItems="center"
+            justifyContent="center"
+            className={classes.mb05}
+          >
+            <FormControl>
+              <RadioGroup
+                className={classes.radioButtons}
+                value={patient.renOncImun}
+                onChange={(e) =>
+                  setPatient({ ...patient, renOncImun: e.target.value })
+                }
+              >
+                <FormControlLabel
+                  value="false"
+                  label="Não"
+                  control={<Radio color="primary" />}
+                />
+                <FormControlLabel
+                  value="true"
+                  label="Sim"
+                  control={<Radio color="primary" />}
+                />
+              </RadioGroup>
+            </FormControl>
+          </Grid>
+
+          <Typography
+            component="h4"
+            align="center"
+            className={clsx([classes.formGroupLabel, classes.m0])}
+          >
+            Paciente com Comorbidades?
+          </Typography>
+          <Grid
+            container
+            alignItems="center"
+            justifyContent="center"
+            className={classes.mb05}
+          >
+            <FormControl>
+              <RadioGroup
+                className={classes.radioButtons}
+                value={comorbidityPatient}
+                onChange={(e) => setComorbidityPatient(e.target.value)}
+              >
+                <FormControlLabel
+                  value="0"
+                  label="Não"
+                  control={<Radio color="primary" />}
+                />
+                <FormControlLabel
+                  value="1"
+                  label="Sim"
+                  control={<Radio color="primary" />}
+                />
+              </RadioGroup>
+            </FormControl>
+          </Grid>
+
+          {comorbidityPatient === '1' && (
+            <>
+              <Typography
+                component="h4"
+                align="center"
+                className={classes.formGroupLabel}
+              >
+                Selecione a Comorbidade
+              </Typography>
+              <Grid
+                container
+                className={classes.formGroup}
+                justifyContent="center"
+              >
+                <Grid item xs={12} sm={8} md={6}>
+                  <FormControl
+                    variant="filled"
+                    fullWidth
+                    className={clsx([classes.input, classes.p05])}
+                  >
+                    <InputLabel>Comorbidade</InputLabel>
+                    <Select
+                      value={patient.idComorbidity}
+                      onChange={(e) =>
+                        setPatient({
+                          ...patient,
+                          idComorbidity: e.target.value as string,
+                        })
+                      }
+                    >
+                      {comorbidities.map((cmb) => (
+                        <MenuItem
+                          key={cmb.id.toString()}
+                          value={cmb.id.toString()}
+                          className={classes.wsUnset}
+                        >
+                          {cmb.comorbidity}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                    <Typography
+                      component="small"
+                      className={classes.helperText}
+                    >
+                      Se sua comorbidade não está na lista, então infelizmente
+                      você não está elegível ao cadastro.
+                    </Typography>
+                  </FormControl>
+                </Grid>
+              </Grid>
+            </>
+          )}
         </>
       )}
 

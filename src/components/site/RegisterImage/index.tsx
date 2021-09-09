@@ -13,7 +13,7 @@ export default function RegisterImage() {
       className={classes.container}
     >
       <img
-        src="assets/images/registerImage.png"
+        src="/assets/images/registerImage.png"
         alt="Figurinha de uma pessoa sendo vacinada e ao lado escrito 'Cadastro de vacinação contra covid-19'"
         className={classes.image}
       />

@@ -66,7 +66,7 @@ export default function StatusCheckData({ statusCheck }: Props) {
       </Grid>
 
       {statusCheck.patient.patientStatus.status.status === 'Negado' && (
-        <Link href={`/atualizar/${statusCheck.patient.id.toString()}`}>
+        <Link href={`/atualizar/${statusCheck.patient.cpf}`}>
           <a>
             <Grid container justifyContent="center" className={classes.mt1}>
               <Grid item xs={10} sm={6} md={4}>

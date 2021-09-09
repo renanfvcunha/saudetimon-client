@@ -3,13 +3,14 @@ import { Box, Grid } from '@material-ui/core';
 import RegisterImage from '~/components/site/RegisterImage';
 import RegistrationForm from '~/components/site/RegistrationForm';
 
-import { IComorbidity, IGroup } from '~/interfaces';
+import { IComorbidity, IGroup, PatientSelf } from '~/interfaces';
 
 type Props = {
   title: string;
   groups: IGroup[];
   comorbidities: IComorbidity[];
-  idCategory: string;
+  idCategory?: string;
+  patientData?: PatientSelf;
 };
 
 export default function Registration({
@@ -17,6 +18,7 @@ export default function Registration({
   groups,
   comorbidities,
   idCategory,
+  patientData,
 }: Props) {
   return (
     <Box component="section">
@@ -41,6 +43,7 @@ export default function Registration({
             groups={groups}
             comorbidities={comorbidities}
             idCategory={idCategory}
+            patientData={patientData}
           />
         </Grid>
       </Grid>

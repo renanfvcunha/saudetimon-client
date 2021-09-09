@@ -4,6 +4,7 @@ import {
   IComorbidity,
   IGroup,
   PatientRegistration,
+  PatientSelf,
   StatusCheck,
 } from '~/interfaces';
 
@@ -80,10 +81,64 @@ export const createPatientReq = async (
   return response.data.msg;
 };
 
-export const statusCheckReq = async (cpf: string) => {
+export const statusCheckReq = async (cpf: string): Promise<StatusCheck> => {
   const response: AxiosResponse<StatusCheck> = await api.get(
     `/patients/status/${cpf}`
   );
 
   return response.data;
+};
+
+export const patientSelfReq = async (cpf: string): Promise<PatientSelf> => {
+  const response: AxiosResponse<PatientSelf> = await api.get(
+    `/patients/me/${cpf}`
+  );
+
+  return response.data;
+};
+
+export const updatePatientReq = async (
+  id: string,
+  patient: PatientRegistration,
+  onUploadProgress: (e: ProgressEvent) => void
+): Promise<string> => {
+  const data = new FormData();
+
+  data.append('name', patient.name);
+  data.append('cpf', patient.cpf);
+  if (patient.susCard) data.append('susCard', patient.susCard);
+  data.append('phone', patient.phone);
+  data.append('street', patient.street);
+  data.append('number', patient.number);
+  if (patient.complement) data.append('complement', patient.complement);
+  data.append('reference', patient.reference);
+  data.append('neighborhood', patient.neighborhood);
+
+  if (patient.idDocFront) data.append('idDocFront', patient.idDocFront);
+  if (patient.idDocVerse) data.append('idDocVerse', patient.idDocVerse);
+  if (patient.cpfAttachment) data.append('cpf', patient.cpfAttachment);
+  if (patient.addressProof) data.append('addressProof', patient.addressProof);
+  if (patient.medicalReport)
+    data.append('medicalReport', patient.medicalReport);
+  if (patient.medicalAuthorization)
+    data.append('medicalAuthorization', patient.medicalAuthorization);
+  if (patient.workContract) data.append('workContract', patient.workContract);
+  if (patient.preNatalCard) data.append('preNatalCard', patient.preNatalCard);
+  if (patient.puerperalCard)
+    data.append('puerperalCard', patient.puerperalCard);
+  if (patient.bornAliveDec) data.append('bornAliveDec', patient.bornAliveDec);
+  if (patient.auxDoc) data.append('auxDoc', patient.auxDoc);
+
+  const response: AxiosResponse<{ msg: string }> = await api.put(
+    `/patients/${id}`,
+    data,
+    {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+      onUploadProgress,
+    }
+  );
+
+  return response.data.msg;
 };

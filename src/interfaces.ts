@@ -71,3 +71,11 @@ export type PatientSelf = IPatient & {
   idComorbidity: number | null;
   status: string;
 };
+
+export interface IVaccineLocation {
+  id: number;
+  name: string;
+  helperText: string;
+  picture: string;
+  url: string;
+}

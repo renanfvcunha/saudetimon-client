@@ -65,20 +65,24 @@ export default function Menu() {
         </a>
       </Link>
 
-      <Grid item container alignItems="center" className={classes.menuItem}>
-        <Grid item xs={3} className={classes.pl15}>
-          <Avatar
-            src="assets/images/localVac.png"
-            alt="Figurinha de uma seringa e um balão de localização"
-            className={classes.avatar}
-          />
-        </Grid>
-        <Grid item xs={9}>
-          <Typography component="span" className={classes.menuItemText}>
-            Locais de Vacinação - Como Chegar
-          </Typography>
-        </Grid>
-      </Grid>
+      <Link href="/locais">
+        <a className={classes.tdNone}>
+          <Grid item container alignItems="center" className={classes.menuItem}>
+            <Grid item xs={3} className={classes.pl15}>
+              <Avatar
+                src="assets/images/localVac.png"
+                alt="Figurinha de uma seringa e um balão de localização"
+                className={classes.avatar}
+              />
+            </Grid>
+            <Grid item xs={9}>
+              <Typography component="span" className={classes.menuItemText}>
+                Locais de Vacinação - Como Chegar
+              </Typography>
+            </Grid>
+          </Grid>
+        </a>
+      </Link>
 
       <Grid item container alignItems="center" className={classes.menuItem}>
         <Grid item xs={3} className={classes.pl15}>

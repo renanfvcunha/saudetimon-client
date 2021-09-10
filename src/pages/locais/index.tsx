@@ -1,4 +1,5 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
+import { GetServerSideProps } from 'next';
 
 import Seo from '~/components/Seo';
 import Background from '~/components/site/Background';
@@ -12,27 +13,20 @@ import { vaccineLocationsReq } from '~/services/api';
 
 import catchHandler, { Err } from '~/utils/catchHandler';
 
-export default function VaccineLocations() {
-  const [vaccineLocations, setVaccineLocations] = useState<
-    IVaccineLocation[]
-  >();
+type Props = {
+  vaccineLocations: IVaccineLocation[];
+  err: string;
+};
 
+export default function VaccineLocations({ vaccineLocations, err }: Props) {
   useEffect(() => {
-    const getVaccineLocations = async () => {
-      try {
-        const data = await vaccineLocationsReq();
-
-        setVaccineLocations(data);
-      } catch (err) {
-        catchHandler(
-          err as Err,
-          'Não foi possível listar os locais de vacinação. Tente novamente ou contate o suporte.'
-        );
-      }
-    };
-
-    getVaccineLocations();
-  }, []);
+    if (err) {
+      catchHandler(
+        JSON.parse(err) as Err,
+        'Não foi possível listar os locais de vacinação. Tente novamente ou contate o suporte.'
+      );
+    }
+  }, [err]);
 
   return (
     <>
@@ -48,3 +42,17 @@ export default function VaccineLocations() {
     </>
   );
 }
+
+export const getServerSideProps: GetServerSideProps = async () => {
+  try {
+    const vaccineLocations = await vaccineLocationsReq();
+
+    return {
+      props: { vaccineLocations },
+    };
+  } catch (err) {
+    return {
+      props: { err: JSON.stringify(err) },
+    };
+  }
+};

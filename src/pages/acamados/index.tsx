@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, FC } from 'react';
 
 import Background from '~/components/site/Background';
 import Header from '~/components/site/Header';
@@ -13,7 +13,7 @@ import { comorbiditiesReq, groupsReq } from '~/services/api';
 
 import catchHandler, { Err } from '~/utils/catchHandler';
 
-export default function Registration() {
+const BedRidden: FC = () => {
   const [groups, setGroups] = useState<IGroup[]>();
   const [comorbidities, setComorbidities] = useState<IComorbidity[]>();
 
@@ -69,4 +69,6 @@ export default function Registration() {
       </Background>
     </>
   );
-}
+};
+
+export default BedRidden;

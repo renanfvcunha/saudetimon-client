@@ -1,10 +1,11 @@
+import { FC } from 'react';
 import Link from 'next/link';
 import { Grid } from '@material-ui/core';
 import clsx from 'clsx';
 
 import useStyles from './styles';
 
-export default function Header() {
+const Header: FC = () => {
   const classes = useStyles();
 
   return (
@@ -59,4 +60,6 @@ export default function Header() {
       </Grid>
     </header>
   );
-}
+};
+
+export default Header;

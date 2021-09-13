@@ -1,3 +1,4 @@
+import { FC } from 'react';
 import {
   Box,
   Card,
@@ -16,7 +17,7 @@ type Props = {
   vaccineLocations: IVaccineLocation[];
 };
 
-export default function VaccineLocations({ vaccineLocations }: Props) {
+const VaccineLocations: FC<Props> = ({ vaccineLocations }) => {
   const classes = useStyles();
 
   return (
@@ -64,4 +65,6 @@ export default function VaccineLocations({ vaccineLocations }: Props) {
       </Grid>
     </Box>
   );
-}
+};
+
+export default VaccineLocations;

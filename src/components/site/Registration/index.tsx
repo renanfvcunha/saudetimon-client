@@ -1,4 +1,5 @@
 import { Box, Grid } from '@material-ui/core';
+import { FC } from 'react';
 
 import RegisterImage from '~/components/site/RegisterImage';
 import RegistrationForm from '~/components/site/RegistrationForm';
@@ -13,13 +14,13 @@ type Props = {
   patientData?: PatientSelf;
 };
 
-export default function Registration({
+const Registration: FC<Props> = ({
   title,
   groups,
   comorbidities,
   idCategory,
   patientData,
-}: Props) {
+}) => {
   return (
     <Box component="section">
       <RegisterImage />
@@ -49,4 +50,6 @@ export default function Registration({
       </Grid>
     </Box>
   );
-}
+};
+
+export default Registration;

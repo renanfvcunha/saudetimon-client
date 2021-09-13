@@ -1,9 +1,10 @@
+import { FC } from 'react';
 import { Box, Grid, Typography } from '@material-ui/core';
 import useStyles from './styles';
 
 import { DotIcon } from '~/components/icons';
 
-export default function Infos() {
+const Infos: FC = () => {
   const classes = useStyles();
 
   return (
@@ -50,4 +51,6 @@ export default function Infos() {
       </Grid>
     </div>
   );
-}
+};
+
+export default Infos;

@@ -1,9 +1,10 @@
+import { FC } from 'react';
 import { Avatar, Grid, Typography } from '@material-ui/core';
 import Link from 'next/link';
 
 import useStyles from './styles';
 
-export default function Menu() {
+const Menu: FC = () => {
   const classes = useStyles();
 
   return (
@@ -13,7 +14,7 @@ export default function Menu() {
           <Grid item container alignItems="center" className={classes.menuItem}>
             <Grid item xs={3} className={classes.pl15}>
               <Avatar
-                src="assets/images/acamado.png"
+                src="/assets/images/acamado.png"
                 alt="Figurinha de uma pessoa acamada"
                 className={classes.avatar}
               />
@@ -32,7 +33,7 @@ export default function Menu() {
           <Grid item container alignItems="center" className={classes.menuItem}>
             <Grid item xs={3} className={classes.pl15}>
               <Avatar
-                src="assets/images/celular.png"
+                src="/assets/images/celular.png"
                 alt="Figurinha de uma pessoa mexendo no celular"
                 className={classes.avatar}
               />
@@ -51,7 +52,7 @@ export default function Menu() {
           <Grid item container alignItems="center" className={classes.menuItem}>
             <Grid item xs={3} className={classes.pl15}>
               <Avatar
-                src="assets/images/checagem.png"
+                src="/assets/images/checagem.png"
                 alt="Figurinha de uma pessoa mexendo no celular com um ícone verde de checagem"
                 className={classes.avatar}
               />
@@ -70,7 +71,7 @@ export default function Menu() {
           <Grid item container alignItems="center" className={classes.menuItem}>
             <Grid item xs={3} className={classes.pl15}>
               <Avatar
-                src="assets/images/localVac.png"
+                src="/assets/images/localVac.png"
                 alt="Figurinha de uma seringa e um balão de localização"
                 className={classes.avatar}
               />
@@ -84,20 +85,26 @@ export default function Menu() {
         </a>
       </Link>
 
-      <Grid item container alignItems="center" className={classes.menuItem}>
-        <Grid item xs={3} className={classes.pl15}>
-          <Avatar
-            src="assets/images/duvidas.png"
-            alt="Figurinha de uma pessoa rodeada de pontos de interrogação"
-            className={classes.avatar}
-          />
-        </Grid>
-        <Grid item xs={9}>
-          <Typography component="span" className={classes.menuItemText}>
-            Dúvidas Frequentes
-          </Typography>
-        </Grid>
-      </Grid>
+      <Link href="/duvidas">
+        <a className={classes.tdNone}>
+          <Grid item container alignItems="center" className={classes.menuItem}>
+            <Grid item xs={3} className={classes.pl15}>
+              <Avatar
+                src="/assets/images/duvidas.png"
+                alt="Figurinha de uma pessoa rodeada de pontos de interrogação"
+                className={classes.avatar}
+              />
+            </Grid>
+            <Grid item xs={9}>
+              <Typography component="span" className={classes.menuItemText}>
+                Dúvidas Frequentes
+              </Typography>
+            </Grid>
+          </Grid>
+        </a>
+      </Link>
     </Grid>
   );
-}
+};
+
+export default Menu;

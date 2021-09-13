@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 
 import { IComorbidity, IGroup, PatientSelf } from '~/interfaces';
@@ -13,7 +13,7 @@ import Main from '~/components/site/Main';
 import DenyUser from '~/components/site/UpdateRegistration/DenyUser';
 import Registration from '~/components/site/Registration';
 
-export default function UpdateRegistration() {
+const UpdateRegistration: FC = () => {
   const router = useRouter();
   const { cpf } = router.query;
 
@@ -103,4 +103,6 @@ export default function UpdateRegistration() {
       </Background>
     </>
   );
-}
+};
+
+export default UpdateRegistration;

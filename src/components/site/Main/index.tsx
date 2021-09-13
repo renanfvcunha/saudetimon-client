@@ -1,12 +1,10 @@
-import { ReactNode } from 'react';
+import { FC } from 'react';
 import useStyles from './styles';
 
-type Props = {
-  children: ReactNode;
-};
-
-export default function Main({ children }: Props) {
+const Main: FC = ({ children }) => {
   const classes = useStyles();
 
   return <main className={classes.main}>{children}</main>;
-}
+};
+
+export default Main;

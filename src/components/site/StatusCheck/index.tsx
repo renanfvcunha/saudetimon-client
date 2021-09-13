@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { FC, useState } from 'react';
 import {
   Box,
   Button,
@@ -19,7 +19,7 @@ import catchHandler, { Err } from '~/utils/catchHandler';
 
 import StatusCheckData from './StatusCheckData';
 
-export default function StatusCheck() {
+const StatusCheck: FC = () => {
   const classes = useStyles();
 
   const [cpf, setCpf] = useState('');
@@ -81,4 +81,6 @@ export default function StatusCheck() {
       )}
     </Box>
   );
-}
+};
+
+export default StatusCheck;

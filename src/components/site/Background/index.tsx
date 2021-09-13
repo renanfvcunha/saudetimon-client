@@ -1,13 +1,11 @@
-import { ReactNode } from 'react';
+import { FC } from 'react';
 
 import useStyles from './styles';
 
-type Props = {
-  children: ReactNode;
-};
-
-export default function Background({ children }: Props) {
+const Background: FC = ({ children }) => {
   const classes = useStyles();
 
   return <div className={classes.background}>{children}</div>;
-}
+};
+
+export default Background;

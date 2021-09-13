@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { FC, useEffect } from 'react';
 import { GetServerSideProps } from 'next';
 
 import Seo from '~/components/Seo';
@@ -14,11 +14,11 @@ import { vaccineLocationsReq } from '~/services/api';
 import catchHandler, { Err } from '~/utils/catchHandler';
 
 type Props = {
-  vaccineLocations: IVaccineLocation[];
-  err: string;
+  vaccineLocations?: IVaccineLocation[];
+  err?: string;
 };
 
-export default function VaccineLocations({ vaccineLocations, err }: Props) {
+const VaccineLocations: FC<Props> = ({ vaccineLocations, err }) => {
   useEffect(() => {
     if (err) {
       catchHandler(
@@ -41,7 +41,7 @@ export default function VaccineLocations({ vaccineLocations, err }: Props) {
       </Background>
     </>
   );
-}
+};
 
 export const getServerSideProps: GetServerSideProps = async () => {
   try {
@@ -56,3 +56,5 @@ export const getServerSideProps: GetServerSideProps = async () => {
     };
   }
 };
+
+export default VaccineLocations;

@@ -1,9 +1,10 @@
+import { FC } from 'react';
 import { Grid, Typography } from '@material-ui/core';
 
 import useStyles from './styles';
 import { ErrorIcon } from '~/components/icons';
 
-export default function DenyUser() {
+const DenyUser: FC = () => {
   const classes = useStyles();
 
   return (
@@ -28,4 +29,6 @@ export default function DenyUser() {
       </Grid>
     </Grid>
   );
-}
+};
+
+export default DenyUser;

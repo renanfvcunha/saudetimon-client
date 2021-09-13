@@ -1,8 +1,9 @@
 import { Grid } from '@material-ui/core';
+import { FC } from 'react';
 
 import useStyles from './styles';
 
-export default function RegisterImage() {
+const RegisterImage: FC = () => {
   const classes = useStyles();
 
   return (
@@ -19,4 +20,6 @@ export default function RegisterImage() {
       />
     </Grid>
   );
-}
+};
+
+export default RegisterImage;

@@ -1,3 +1,4 @@
+import { FC } from 'react';
 import Link from 'next/link';
 import { Button, Grid, Typography } from '@material-ui/core';
 import clsx from 'clsx';
@@ -10,7 +11,7 @@ type Props = {
   statusCheck: StatusCheck;
 };
 
-export default function StatusCheckData({ statusCheck }: Props) {
+const StatusCheckData: FC<Props> = ({ statusCheck }) => {
   const classes = useStyles();
 
   return (
@@ -80,4 +81,6 @@ export default function StatusCheckData({ statusCheck }: Props) {
       )}
     </>
   );
-}
+};
+
+export default StatusCheckData;

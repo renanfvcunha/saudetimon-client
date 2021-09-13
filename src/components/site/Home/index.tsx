@@ -1,4 +1,5 @@
 import { Box, Grid } from '@material-ui/core';
+import { FC } from 'react';
 
 import RegisterImage from '~/components/site/RegisterImage';
 import Infos from './Infos';
@@ -6,7 +7,7 @@ import Menu from './Menu';
 
 import useStyles from './styles';
 
-export default function Home() {
+const Home: FC = () => {
   const classes = useStyles();
 
   return (
@@ -30,4 +31,6 @@ export default function Home() {
       </Grid>
     </Box>
   );
-}
+};
+
+export default Home;

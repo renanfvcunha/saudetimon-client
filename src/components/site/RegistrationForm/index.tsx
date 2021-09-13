@@ -1,4 +1,11 @@
-import { ChangeEvent, createRef, FormEvent, useEffect, useState } from 'react';
+import {
+  ChangeEvent,
+  createRef,
+  FC,
+  FormEvent,
+  useEffect,
+  useState,
+} from 'react';
 import { useRouter } from 'next/router';
 import {
   Box,
@@ -41,13 +48,13 @@ type Props = {
   patientData?: PatientSelf;
 };
 
-export default function RegistrationForm({
+const RegistrationForm: FC<Props> = ({
   title,
   groups,
   comorbidities,
   idCategory,
   patientData,
-}: Props) {
+}) => {
   const classes = useStyles();
   const router = useRouter();
 
@@ -749,4 +756,6 @@ export default function RegistrationForm({
       </Grid>
     </Box>
   );
-}
+};
+
+export default RegistrationForm;

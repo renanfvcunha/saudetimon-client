@@ -2,6 +2,7 @@ import axios, { AxiosResponse } from 'axios';
 
 import {
   IComorbidity,
+  IDoubt,
   IGroup,
   IVaccineLocation,
   PatientRegistration,
@@ -148,6 +149,12 @@ export const vaccineLocationsReq = async (): Promise<IVaccineLocation[]> => {
   const response: AxiosResponse<IVaccineLocation[]> = await api.get(
     '/vaccinelocations'
   );
+
+  return response.data;
+};
+
+export const frequentDoubtsReq = async (): Promise<IDoubt[]> => {
+  const response: AxiosResponse<IDoubt[]> = await api.get('/doubts');
 
   return response.data;
 };

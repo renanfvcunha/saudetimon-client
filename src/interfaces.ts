@@ -79,3 +79,9 @@ export interface IVaccineLocation {
   picture: string;
   url: string;
 }
+
+export interface IDoubt {
+  id: number;
+  question: string;
+  answer: string;
+}
